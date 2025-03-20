@@ -166,7 +166,7 @@ module game_screen(
     localparam orange = 12'b0000_1000_1111;
     localparam red = 12'b0000_0000_1111;
     localparam blue = 12'b1111_0000_0000;
-    localparam light_blue = 12'b1100_0000_0000;
+    localparam light_blue = 12'b1000_0000_0000;
     
     wire block_settling_reset;
     

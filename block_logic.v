@@ -121,10 +121,10 @@ module block_logic(
                                 x3_next = x3;
                                 x4_next = x4 - 4'd1;
                                 
-                                y1_next = y1 - 5'd2;
-                                y2_next = y2 - 5'd1;
-                                y3_next = y3;
-                                y4_next = y4 + 5'd1;
+                                y1_next = y1 - 5'd1;
+                                y2_next = y2;
+                                y3_next = y3+1;
+                                y4_next = y4 + 5'd2;
 
                             end
                             
