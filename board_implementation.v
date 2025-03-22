@@ -8,6 +8,7 @@ module board_implementation(
     output reg border_x, border_y
 );
 
+
     always@(posedge clk)
         begin
             if(reset)
@@ -69,14 +70,19 @@ module board_implementation(
                             x_b <= 4'b1001;
                             border_x <= 1'b0;
                         end
-                    else if(x==203 || x==226 || x==249 || x==272 || x==295 || x==318 || x==341 || x==364 || x==387 || x==410 || x==433)
+                    else if(x==226 || x==249 || x==272 || x==295 || x==318 || x==341 || x==364 || x==387 || x==410)
                         begin
-                            x_b <= 4'bzzzz;
+                            //x_b <= 4'bzzzz;
+                            border_x <= 1'b1;
+                        end
+                    else if(x==203 || x==433)
+                        begin
+                            //x_b <= 4'bzzzz;
                             border_x <= 1'b1;
                         end
                     else
                         begin
-                            x_b <= 4'bzzzz;
+                            //x_b <= 4'bzzzz;
                             border_x <= 1'b0;
                         end
 
@@ -181,14 +187,14 @@ module board_implementation(
                             y_b <= 5'b10011;
                             border_y <= 1'b0;
                         end
-                    else if(y==11 || y==34 || y==57 || y==80 || y==103 || y==126 || y==149 || y==172 || y==195 || y==218 || y==241 || y==264 || y==287 || y==310 || y==333 || y==356 || y==379 || y==402 || y==425 || y==448 || y==471)
+                    else if(y==11 || y==34 || y==57 || y==80 || y==103 || y==126 || y==149 || y==172 || y==195 || y==218 || y==241 || y==264 || y==287 || y==310 || y==333 || y==356 || y==379 || y==402 || y==425 || y==448)
                         begin
-                            y_b <= 5'bzzzz;
+                            //y_b <= 5'bzzzz;
                             border_y <= 1'b1;
                         end
                     else
                         begin
-                            y_b <= 5'bzzzz;
+                            //y_b <= 5'bzzzz;
                             border_y <= 1'b0;
                         end
                 end

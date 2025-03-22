@@ -26,19 +26,24 @@ module RaNuGe(
     );
     
     reg [2:0] next;
+    //reg [2:0] count;
+    
     
     always @(*) begin
-//        if (play) next = initial_count;
-//        else
-    next = {random_number[2]^random_number[1], random_number[2:1]};
+        next = {(random_number[1]^random_number[0]), random_number[2:1]};
+        //next = random_number + 1'b1;
+        //next = count + 1'b1;
     end
     
     always @(posedge clk) begin
-        if (reset) random_number <= 1'b1;
+        if (reset) random_number = 3'b001;//count <= 1'b1;//
         else begin
-            if (block_new) random_number <= next;
-            else random_number <= random_number;
+            if (block_new) random_number = next;
+            else random_number = random_number;
+            //count <= (next == 3'b0) ? 3'b1 : next;
         end
     end
+    
+    //assign random_number = (block_new) ? count : random_number;
 
 endmodule

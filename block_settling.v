@@ -28,7 +28,13 @@ module block_settling(
     input [3:0] x1,x2,x3,x4,
     input [2:0] block_type,
     output [11:0] color,
-    output reg block_logic_reset
+    output reg block_logic_reset,
+    input [3:0] x1_next_out, x2_next_out, x3_next_out, x4_next_out,
+    input [4:0] y1_next_out, y2_next_out, y3_next_out, y4_next_out,
+    input [3:0] movement,
+    output reg [3:0] changed_x1, changed_x2, changed_x3, changed_x4,
+    output reg [4:0] changed_y1, changed_y2, changed_y3, changed_y4,
+    output reg [15:0] score
     );
     //localparam middle = 12'b1111_0111_0000;
     localparam middle = {12{1'b0}};
@@ -77,9 +83,7 @@ module block_settling(
             matrix[19] <= 0;
             matrix[20] <= {10{1'b1}};
             block_logic_reset <= 1'b0;
-            // for(i = 0; i < 20; i = i + 1)
-            //     for(j = 0; j < 10; j = j + 1)
-            //         color_matrix[i][j] = 4'd0;
+            score <= 0;
 
         end
         else begin
@@ -102,6 +106,7 @@ module block_settling(
                         begin
                             for (new_a = a; new_a > 0; new_a = new_a - 1)
                                 begin
+                                    score <= score + 15'd1;
                                     matrix[new_a] <= matrix[new_a - 1];
                                     color_matrix[new_a][0] <= color_matrix[new_a - 1][0];
                                     color_matrix[new_a][1] <= color_matrix[new_a - 1][1];
@@ -113,8 +118,6 @@ module block_settling(
                                     color_matrix[new_a][7] <= color_matrix[new_a - 1][7];
                                     color_matrix[new_a][8] <= color_matrix[new_a - 1][8];
                                     color_matrix[new_a][9] <= color_matrix[new_a - 1][9];
-                                    // for(m=0; m<10; m=m+1)
-                                    //     color_matrix[new_a][m] = color_matrix[new_a - 1][m];
 
                                 end
                                 
@@ -142,7 +145,7 @@ module block_settling(
     localparam orange = 12'b0000_1000_1111;
     localparam red = 12'b0000_0000_1111;
     localparam blue = 12'b1111_0000_0000;
-    localparam light_blue = 12'b1100_0000_0000;
+    localparam light_blue = 12'b1101_1101_0100;
     
     reg [11:0] color_out;
     
@@ -160,7 +163,55 @@ module block_settling(
         endcase
     end
     
-    //assign [11:0] colour_calc = ((x<=(block1_x + 10'd21) && x>=block1_x && y>=block1_y && y<=(block1_y + 10'd21))d ? block_colour : middle;
+    wire condition = matrix[y1][x1_next_out] | matrix[y2][x2_next_out] | matrix[y3][x3_next_out] | matrix[y4][x4_next_out];
+    wire condition1 = matrix[y1_next_out][x1_next_out] | matrix[y2_next_out][x2_next_out] | matrix[y3_next_out][x3_next_out] | matrix[y4_next_out][x4_next_out];
+    
+    always @(*) begin
+        casex (movement)
+        4'b0011: begin
+            changed_x1 = (condition) ? x1 : x1_next_out;
+            changed_x2 = (condition) ? x2 : x2_next_out;
+            changed_x3 = (condition) ? x3 : x3_next_out;
+            changed_x4 = (condition) ? x4 : x4_next_out;
+            changed_y1 = y1_next_out;
+            changed_y2 = y2_next_out;
+            changed_y3 = y3_next_out;
+            changed_y4 = y4_next_out;
+        end
+        4'b0100: begin
+            changed_x1 = (condition) ? x1 : x1_next_out;
+            changed_x2 = (condition) ? x2 : x2_next_out;
+            changed_x3 = (condition) ? x3 : x3_next_out;
+            changed_x4 = (condition) ? x4 : x4_next_out;
+            changed_y1 = y1_next_out;
+            changed_y2 = y2_next_out;
+            changed_y3 = y3_next_out;
+            changed_y4 = y4_next_out;
+            
+        end
+        4'b000x: begin
+            changed_x1 = (condition1) ? x1 : x1_next_out;
+            changed_x2 = (condition1) ? x2 : x2_next_out;
+            changed_x3 = (condition1) ? x3 : x3_next_out;
+            changed_x4 = (condition1) ? x4 : x4_next_out;
+            changed_y1 = (condition1) ? y1 : y1_next_out;
+            changed_y2 = (condition1) ? y2 : y2_next_out;
+            changed_y3 = (condition1) ? y3 : y3_next_out;
+            changed_y4 = (condition1) ? y4 : y4_next_out;
+        end
+        default: begin
+            changed_x1 = x1_next_out;
+            changed_x2 = x2_next_out;
+            changed_x3 = x3_next_out;
+            changed_x4 = x4_next_out;
+            changed_y1 = y1_next_out;
+            changed_y2 = y2_next_out;
+            changed_y3 = y3_next_out;
+            changed_y4 = y4_next_out;
+        end
+        endcase
+    end
+    
     assign color = (matrix[y_vga2][x_vga2]) ? color_out : middle;
 
 endmodule

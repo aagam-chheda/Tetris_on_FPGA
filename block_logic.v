@@ -26,7 +26,11 @@ module block_logic(
     output reg [3:0] x1,x2,x3,x4,
     output reg [4:0] y1,y2,y3,y4,
     input [1:0] velocity,
-    input block_settling_reset
+    input block_settling_reset,
+    output [3:0] x1_next_out, x2_next_out, x3_next_out, x4_next_out, 
+    output [4:0] y1_next_out, y2_next_out, y3_next_out, y4_next_out,
+    input [3:0] changed_x1, changed_x2, changed_x3, changed_x4,
+    input [4:0] changed_y1, changed_y2, changed_y3, changed_y4
     );
     
     reg [24:0] speed;
@@ -52,7 +56,8 @@ module block_logic(
     wire speed_reached = (speed == speed_wanted) ? 1'b1 : 1'b0;
     
     wire block_reset = (block_current != block_next) | reset | block_settling_reset;
-    
+    //wire block_reset = reset | block_settling_reset;
+
     
     //1: line, 2: square, 3: inverted T, 4: S, 5: Z, 6: J, 7: L;
     // config 00, 01 are 0 and 180 degree configurations
@@ -110,7 +115,7 @@ module block_logic(
         y3_next = y3;
         y4_next = y4;
         
-        case(block_current)
+        case(block_type)
             3'd1: begin // line
                 casex(movement)
                     3'b00x: begin 
@@ -121,23 +126,23 @@ module block_logic(
                                 x3_next = x3;
                                 x4_next = x4 - 4'd1;
                                 
-                                y1_next = y1 - 5'd1;
-                                y2_next = y2;
-                                y3_next = y3+1;
-                                y4_next = y4 + 5'd2;
+                                y1_next = y1 - 5'd2;
+                                y2_next = y2 - 5'd1;
+                                y3_next = y3;
+                                y4_next = y4 + 5'd1;
 
                             end
                             
                             2'b1x: begin
-                                x1_next = x1 - 4'd2;
-                                x2_next = x2 - 4'd1;
-                                x3_next = x3;
-                                x4_next = x4 + 4'd1;
+                                x1_next = x4 - 4'd1;
+                                x2_next = x3;
+                                x3_next = x2 + 4'd1;
+                                x4_next = x1 + 4'd2;
                                 
-                                y1_next = y1 + 5'd2;
-                                y2_next = y2 + 5'd1;
-                                y3_next = y3;
-                                y4_next = y4 - 5'd1;
+                                y1_next = y4 - 5'd1;
+                                y2_next = y3;
+                                y3_next = y2 + 5'd1;
+                                y4_next = y1 + 5'd2;
 
                             end
                            
@@ -1175,14 +1180,21 @@ module block_logic(
     wire [3:0] x2_next_constrained;
     wire [3:0] x3_next_constrained;
     wire [3:0] x4_next_constrained;
-    wire [4:0] y1_next_constrained;
-    wire [4:0] y2_next_constrained;
-    wire [4:0] y3_next_constrained;
-    wire [4:0] y4_next_constrained;
     
-    // collision_detection CD(x1_next, x2_next, x3_next, x4_next, x1_next_constrained, x2_next_constrained, x3_next_constrained, x4_next_constrained);
-    collision_detection CD(clk, reset, y1, y2, y3, y4, y1_next, y2_next, y3_next, y4_next, x1, x2, x3, x4, x1_next, x2_next, x3_next, x4_next, x1_next_constrained, x2_next_constrained, x3_next_constrained, x4_next_constrained, y1_next_constrained, y2_next_constrained, y3_next_constrained, y4_next_constrained);
-
+    collision_detection CD(x1_next, x2_next, x3_next, x4_next, x1_next_constrained, x2_next_constrained, x3_next_constrained, x4_next_constrained);
+    
+//    reg [3:0] x1_next_p;
+//    reg [3:0] x2_next_p;
+//    reg [3:0] x3_next_p;
+//    reg [3:0] x4_next_p;
+    
+//    wire [0:9] matrix_y1 = block_settling_matrix[y1_next];
+    
+//    always @(*) begin
+//        if (matrix_y1[x1_next_constrained]) begin
+            
+//        end
+//    end
     
     //1: line, 2: square, 3: inverted T, 4: S, 5: Z, 6: J, 7: L
     always @(posedge clk) begin
@@ -1200,14 +1212,14 @@ module block_logic(
             block_current <= block_next;
         end
         else begin
-            x1 <= x1_next_constrained;
-            x2 <= x2_next_constrained;
-            x3 <= x3_next_constrained;
-            x4 <= x4_next_constrained;
-            y1 <= y1_next_constrained;
-            y2 <= y2_next_constrained;
-            y3 <= y3_next_constrained;
-            y4 <= y4_next_constrained;
+            x1 <= changed_x1;
+            x2 <= changed_x2;
+            x3 <= changed_x3;
+            x4 <= changed_x4;
+            y1 <= changed_y1;
+            y2 <= changed_y2;
+            y3 <= changed_y3;
+            y4 <= changed_y4;
             config_current <= config_next;
             block_next <= block_type;
             block_current <= block_next;
@@ -1215,4 +1227,14 @@ module block_logic(
             
         end
     end    
+    
+    assign x2_next_out = x2_next_constrained;
+    assign x1_next_out = x1_next_constrained;
+    assign x3_next_out = x3_next_constrained;
+    assign x4_next_out = x4_next_constrained;
+    
+    assign y2_next_out = y2_next;
+    assign y1_next_out = y1_next;
+    assign y3_next_out = y3_next;
+    assign y4_next_out = y4_next;
 endmodule
