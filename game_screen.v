@@ -45,6 +45,9 @@ module game_screen(
     wire random_block_reset = reset | block_settling_reset;
     
     wire [15:0] score;
+    wire [3:0] units__place, tens__place, hundreds__place, thousands__place;
+
+    score_conversion score_conv(score, clk, reset, units__place, tens__place, hundreds__place, thousands__place);
     
     
     wire [2:0] block_type;
@@ -95,10 +98,10 @@ module game_screen(
     wire tens_a, tens_b, tens_c, tens_d, tens_e, tens_f, tens_g, tens_h, tens_i, tens_j, tens_k, tens_l, tens_m;
     wire units_a, units_b, units_c, units_d, units_e, units_f, units_g, units_h, units_i, units_j, units_k, units_l, units_m;
     
-    segment7 thousands(score[15:12], thsnd_a, thsnd_b, thsnd_c, thsnd_d, thsnd_e, thsnd_f, thsnd_g, thsnd_h, thsnd_i, thsnd_j, thsnd_k, thsnd_l, thsnd_m);
-    segment7 hundreds(score[11:8], hndrd_a, hndrd_b, hndrd_c, hndrd_d, hndrd_e, hndrd_f, hndrd_g, hndrd_h, hndrd_i, hndrd_j, hndrd_k, hndrd_l, hndrd_m);
-    segment7 tens_place(score[7:4], tens_a, tens_b, tens_c, tens_d, tens_e, tens_f, tens_g, tens_h, tens_i, tens_j, tens_k, tens_l, tens_m);
-    segment7 units_place(score[3:0], units_a, units_b, units_c, units_d, units_e, units_f, units_g, units_h, units_i, units_j, units_k, units_l, units_m);
+    segment7 thousands(thousands__place, thsnd_a, thsnd_b, thsnd_c, thsnd_d, thsnd_e, thsnd_f, thsnd_g, thsnd_h, thsnd_i, thsnd_j, thsnd_k, thsnd_l, thsnd_m);
+    segment7 hundreds(hundreds__place, hndrd_a, hndrd_b, hndrd_c, hndrd_d, hndrd_e, hndrd_f, hndrd_g, hndrd_h, hndrd_i, hndrd_j, hndrd_k, hndrd_l, hndrd_m);
+    segment7 tens_place(tens__place, tens_a, tens_b, tens_c, tens_d, tens_e, tens_f, tens_g, tens_h, tens_i, tens_j, tens_k, tens_l, tens_m);
+    segment7 units_place(units__place, units_a, units_b, units_c, units_d, units_e, units_f, units_g, units_h, units_i, units_j, units_k, units_l, units_m);
     
     // wire [6:0] scrn_at_thsnd = {(x<=thsnd_right && x>=thsnd_left && y>=a_top && y<=a_bottom), //a
     //                             (x<=thsnd_right && x>=thsnd_b_left && y>=b_top && y<=b_bottom), //b

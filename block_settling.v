@@ -31,7 +31,7 @@ module block_settling(
     output reg block_logic_reset,
     input [3:0] x1_next_out, x2_next_out, x3_next_out, x4_next_out,
     input [4:0] y1_next_out, y2_next_out, y3_next_out, y4_next_out,
-    input [3:0] movement,
+    input [2:0] movement,
     output reg [3:0] changed_x1, changed_x2, changed_x3, changed_x4,
     output reg [4:0] changed_y1, changed_y2, changed_y3, changed_y4,
     output reg [15:0] score
