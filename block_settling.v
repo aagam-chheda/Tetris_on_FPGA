@@ -31,11 +31,16 @@ module block_settling(
     output reg block_logic_reset,
     input [3:0] x1_next_out, x2_next_out, x3_next_out, x4_next_out,
     input [4:0] y1_next_out, y2_next_out, y3_next_out, y4_next_out,
-    input [2:0] movement,
+    input [3:0] movement,
     output reg [3:0] changed_x1, changed_x2, changed_x3, changed_x4,
     output reg [4:0] changed_y1, changed_y2, changed_y3, changed_y4,
-    output reg [15:0] score
+    output reg [15:0] score,
+    input ce,
+    output game_over_logic
     );
+    
+    (* rom_style = "block" *)
+    
     //localparam middle = 12'b1111_0111_0000;
     localparam middle = {12{1'b0}};
     localparam white = {12{1'b1}};
@@ -56,7 +61,7 @@ module block_settling(
     
     
     wire oob = matrix[y1p][x1] | matrix[y2p][x2] | matrix[y3p][x3] | matrix[y4p][x4];
-    
+    assign game_over_logic = matrix[2][3] | matrix[2][4] | matrix[2][5] | matrix[2][6]; 
     integer i,j,a,new_a,l,m;
     
     always @(posedge clk) begin
@@ -86,7 +91,7 @@ module block_settling(
             score <= 0;
 
         end
-        else begin
+        else if (ce)  begin
             if (oob) begin
                 matrix[y1][x1] <= 1'b1;
                 matrix[y2][x2] <= 1'b1;

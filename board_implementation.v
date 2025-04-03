@@ -5,7 +5,8 @@ module board_implementation(
     input [9:0] x,y,
     output reg [3:0] x_b,
     output reg [4:0] y_b,
-    output reg border_x, border_y
+    output reg border_x, border_y,
+    input ce
 );
 
 
@@ -18,7 +19,7 @@ module board_implementation(
                     border_x <= 1'b0;
                     border_y <= 1'b0;
                 end
-            else
+            else if (ce) 
                 begin
                     if(x>=204 && x<=225)
                         begin

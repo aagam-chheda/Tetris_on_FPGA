@@ -22,7 +22,8 @@
 
 module RaNuGe(
     input clk, reset, block_new,
-    output reg [2:0] random_number
+    output reg [2:0] random_number,
+    input ce
     );
     
     reg [2:0] next;
@@ -39,7 +40,7 @@ module RaNuGe(
         if (reset) random_number = 3'b001;//count <= 1'b1;//
         else begin
             if (block_new) random_number = next;
-            else random_number = random_number;
+            else if (ce) random_number = random_number;
             //count <= (next == 3'b0) ? 3'b1 : next;
         end
     end

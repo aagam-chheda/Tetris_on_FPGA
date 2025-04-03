@@ -30,32 +30,41 @@ module block_logic(
     output [3:0] x1_next_out, x2_next_out, x3_next_out, x4_next_out, 
     output [4:0] y1_next_out, y2_next_out, y3_next_out, y4_next_out,
     input [3:0] changed_x1, changed_x2, changed_x3, changed_x4,
-    input [4:0] changed_y1, changed_y2, changed_y3, changed_y4
+    input [4:0] changed_y1, changed_y2, changed_y3, changed_y4,
+    input ce
     );
     
-    reg [24:0] speed;
+    reg [24:0] speed, speed_next;
     
     always @(posedge clk) begin
         if (reset) speed <= 0;
-        else speed <= speed + 1'b1;
+        else if (ce) speed <= speed_next;
     end
+    reg [1:0] velocity_reg, velocity_next;
     
     reg [2:0] block_current, block_next;
     
     reg [24:0] speed_wanted;
     
     always @(*) begin
-        case (velocity)
-            2'b00: speed_wanted = 25'b1110010011100001110000000;
-            2'b01: speed_wanted = 25'b0100110001001011010000000;
-            2'b10: speed_wanted = 25'b0100010010101010001000000;
-            2'b11: speed_wanted = {25{1'b1}};
+        case(speed == speed_wanted)
+            1'b1: speed_next = 0;
+            1'b0: speed_next = speed + 1'b1;
+        endcase
+    end
+    
+    always @(*) begin
+        case (velocity_reg)
+            2'b00: speed_wanted = 25'b1111000000000000000000000;
+            2'b01: speed_wanted = 25'b1110000000000000000000000;
+            2'b10: speed_wanted = 25'b1000000010101010001000000;
+            2'b11: speed_wanted = 25'b0000010010101010001000000;
         endcase
     end
     
     wire speed_reached = (speed == speed_wanted) ? 1'b1 : 1'b0;
     
-    wire block_reset = (block_current != block_next) | reset | block_settling_reset;
+    wire block_reset = (block_current != block_next) | reset | block_settling_reset | (velocity_next != velocity_reg);
     //wire block_reset = reset | block_settling_reset;
 
     
@@ -992,18 +1001,6 @@ module block_logic(
                                 y3_next = y3-1;
                                 y4_next = y4;
                             end
-                            
-                            default: begin
-                                x1_next = x1;
-                                x2_next = x2;
-                                x3_next = x3;
-                                x4_next = x4;
-                                
-                                y1_next = y1;
-                                y2_next = y2;
-                                y3_next = y3;
-                                y4_next = y4;
-                            end
                         endcase  
                     end
                     
@@ -1210,8 +1207,9 @@ module block_logic(
             endcase
             config_current <= 2'b00;
             block_current <= block_next;
+            velocity_reg <= velocity_next;
         end
-        else begin
+        else if (ce) begin
             x1 <= changed_x1;
             x2 <= changed_x2;
             x3 <= changed_x3;
@@ -1223,8 +1221,8 @@ module block_logic(
             config_current <= config_next;
             block_next <= block_type;
             block_current <= block_next;
-            
-            
+            velocity_next <= velocity;
+            velocity_reg <= velocity_next;
         end
     end    
     
