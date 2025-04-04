@@ -1,28 +1,8 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 08.03.2025 11:05:05
-// Design Name: 
-// Module Name: segment7
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
 
 module segment7(
     input [3:0] number,
-    output reg a,b,c,d,e,f,g
+    output reg a,b,c,d,e,f,g,h,i,j,k,l,m
     );
     // aaa
     //f   b
@@ -32,19 +12,18 @@ module segment7(
     //e   c
     // ddd
     always @(*) begin
-        case(number)
-            4'd0: {a,b,c,d,e,f,g} = {1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b0};
-            4'd1: {a,b,c,d,e,f,g} = {1'b0,1'b1,1'b1,1'b0,1'b0,1'b0,1'b0};
-            4'd2: {a,b,c,d,e,f,g} = {1'b1,1'b1,1'b0,1'b1,1'b1,1'b0,1'b1};
-            4'd3: {a,b,c,d,e,f,g} = {1'b1,1'b1,1'b1,1'b1,1'b0,1'b0,1'b1};
-            4'd4: {a,b,c,d,e,f,g} = {1'b0,1'b1,1'b1,1'b0,1'b0,1'b1,1'b1};
-            4'd5: {a,b,c,d,e,f,g} = {1'b1,1'b0,1'b1,1'b1,1'b0,1'b1,1'b1};
-            4'd6: {a,b,c,d,e,f,g} = {1'b1,1'b0,1'b1,1'b1,1'b1,1'b1,1'b1};
-            4'd7: {a,b,c,d,e,f,g} = {1'b1,1'b1,1'b1,1'b0,1'b0,1'b0,1'b0};
-            4'd8: {a,b,c,d,e,f,g} = {1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1};
-            4'd9: {a,b,c,d,e,f,g} = {1'b1,1'b1,1'b1,1'b0,1'b0,1'b1,1'b1};
-            default: {a,b,c,d,e,f,g} = {1'b1,1'b1,1'b1,1'b0,1'b0,1'b0,1'b1};
+        case(number)                         // {a,b,c,d,e,f,g,h,i,j,k,l,m}
+            4'd0: {a,b,c,d,e,f,g,h,i,j,k,l,m} = {0,1,1,1,0,1,0,1,1,1,0,1,0};
+            4'd1: {a,b,c,d,e,f,g,h,i,j,k,l,m} = {1,1,1,1,1,0,0,0,0,0,0,0,0};
+            4'd2: {a,b,c,d,e,f,g,h,i,j,k,l,m} = {0,1,0,0,1,1,0,1,0,0,1,1,1};
+            4'd3: {a,b,c,d,e,f,g,h,i,j,k,l,m} = {0,1,0,1,0,1,1,0,0,0,1,1,1};
+            4'd4: {a,b,c,d,e,f,g,h,i,j,k,l,m} = {1,1,0,1,1,0,0,0,0,1,1,0,1};
+            4'd5: {a,b,c,d,e,f,g,h,i,j,k,l,m} = {1,0,0,1,0,1,1,0,0,1,0,1,1};
+            4'd6: {a,b,c,d,e,f,g,h,i,j,k,l,m} = {1,0,0,1,0,1,0,1,0,1,0,1,1};
+            4'd7: {a,b,c,d,e,f,g,h,i,j,k,l,m} = {0,1,1,1,1,0,0,0,0,0,1,1,0};
+            4'd8: {a,b,c,d,e,f,g,h,i,j,k,l,m} = {0,1,0,1,0,1,0,1,0,1,0,1,1};
+            4'd9: {a,b,c,d,e,f,g,h,i,j,k,l,m} = {0,1,0,1,0,1,1,0,0,1,0,1,1};
+            default: {a,b,c,d,e,f,g,h,i,j,k,l,m} = {0,1,1,1,0,1,0,1,1,1,0,1,0};
         endcase
     end
-    
 endmodule
