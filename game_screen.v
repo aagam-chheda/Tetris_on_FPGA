@@ -100,10 +100,10 @@ module game_screen(
     wire tens_a, tens_b, tens_c, tens_d, tens_e, tens_f, tens_g, tens_h, tens_i, tens_j, tens_k, tens_l, tens_m;
     wire units_a, units_b, units_c, units_d, units_e, units_f, units_g, units_h, units_i, units_j, units_k, units_l, units_m;
     
-    segment7 thousands_(thousands_place, thsnd_a, thsnd_b, thsnd_c, thsnd_d, thsnd_e, thsnd_f, thsnd_g);
-    segment7 hundreds_(hundreds_place, hndrd_a, hndrd_b, hndrd_c, hndrd_d, hndrd_e, hndrd_f, hndrd_g);
-    segment7 tens_(tens_place, tens_a, tens_b, tens_c, tens_d, tens_e, tens_f, tens_g);
-    segment7 units_(units_place, units_a, units_b, units_c, units_d, units_e, units_f, units_g);
+    segment7 thousands_(clk, reset, thousands_place, thsnd_a, thsnd_b, thsnd_c, thsnd_d, thsnd_e, thsnd_f, thsnd_g,thsnd_h,thsnd_i, thsnd_j, thsnd_k, thsnd_l, thsnd_m);
+    segment7 hundreds_(clk, reset, hundreds_place, hndrd_a, hndrd_b, hndrd_c, hndrd_d, hndrd_e, hndrd_f, hndrd_g,hndrd_h,hndrd_i, hndrd_j, hndrd_k, hndrd_l, hndrd_m);
+    segment7 tens_(clk, reset, tens_place, tens_a, tens_b, tens_c, tens_d, tens_e, tens_f, tens_g, tens_h, tens_i, tens_j, tens_k, tens_l, tens_m);
+    segment7 units_(clk, reset, units_place, units_a, units_b, units_c, units_d, units_e, units_f, units_g, units_h, units_i, units_j, units_k, units_l, units_m);
     
     wire [12:0] scrn_at_thsnd = {(x>=thsnd_x5 && x<=thsnd_x6 && y>=y_1 && y<=y_2), //a
                                 (x>=thsnd_x5 && x<=thsnd_x6 && y>=y_3 && y<=y_4), //b
@@ -117,7 +117,7 @@ module game_screen(
                                 (x>=thsnd_x1 && x<=thsnd_x2 && y>=y_3 && y<=y_4), //j
                                 (x>=thsnd_x1 && x<=thsnd_x2 && y>=y_1 && y<=y_2), //k
                                 (x>=thsnd_x3 && x<=thsnd_x4 && y>=y_1 && y<=y_2), //l
-                                (x>=thsnd_x3 && x<=thsnd_x4 && y>=y_5 && y<=y_6), //m
+                                (x>=thsnd_x3 && x<=thsnd_x4 && y>=y_5 && y<=y_6) //m
                             };
     
     
@@ -133,7 +133,7 @@ module game_screen(
                                 (x>=hndrd_x1 && x<=hndrd_x2 && y>=y_3 && y<=y_4), //j
                                 (x>=hndrd_x1 && x<=hndrd_x2 && y>=y_1 && y<=y_2), //k
                                 (x>=hndrd_x3 && x<=hndrd_x4 && y>=y_1 && y<=y_2), //l
-                                (x>=hndrd_x3 && x<=hndrd_x4 && y>=y_5 && y<=y_6), //m
+                                (x>=hndrd_x3 && x<=hndrd_x4 && y>=y_5 && y<=y_6) //m
                             };
     
     
@@ -149,7 +149,7 @@ module game_screen(
                                 (x>=tens_x1 && x<=tens_x2 && y>=y_3 && y<=y_4), //j
                                 (x>=tens_x1 && x<=tens_x2 && y>=y_1 && y<=y_2), //k
                                 (x>=tens_x3 && x<=tens_x4 && y>=y_1 && y<=y_2), //l
-                                (x>=tens_x3 && x<=tens_x4 && y>=y_5 && y<=y_6), //m
+                                (x>=tens_x3 && x<=tens_x4 && y>=y_5 && y<=y_6) //m
                             };
     
     
@@ -165,7 +165,7 @@ module game_screen(
                                 (x>=units_x1 && x<=units_x2 && y>=y_3 && y<=y_4), //j
                                 (x>=units_x1 && x<=units_x2 && y>=y_1 && y<=y_2), //k
                                 (x>=units_x3 && x<=units_x4 && y>=y_1 && y<=y_2), //l
-                                (x>=units_x3 && x<=units_x4 && y>=y_5 && y<=y_6), //m
+                                (x>=units_x3 && x<=units_x4 && y>=y_5 && y<=y_6) //m
                             };
     
     wire scrn_in_middle = ((x <= right_x) && (x >= left_x) && (y <= bottom) && (y >= top));
@@ -193,7 +193,7 @@ module game_screen(
     assign block3_y = 10'd11 + (10'd23)*(y3);
     assign block4_y = 10'd11 + (10'd23)*(y4);
     
-    reg [3:0] movement; //  000 clockwise, 001 anti-clockwise, 010 down, 011 left, 100 right, 101 nothing
+    reg [2:0] movement; //  000 clockwise, 001 anti-clockwise, 010 down, 011 left, 100 right, 101 nothing
 
     always@(*) begin
         case({clockwise_db, anti_clkwise_db, down_db, left_db, right_db})

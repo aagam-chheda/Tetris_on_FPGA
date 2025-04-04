@@ -10,17 +10,17 @@ module score_conversion(
         begin
             if(reset)
                 begin
-                    thousands_place = 4'b0000;
-                    hundreds_place = 4'b0000;
-                    tens_place = 4'b0000;
-                    units_place = 4'b0000;
+                    thousands_place <= 4'b0000;
+                    hundreds_place <= 4'b0000;
+                    tens_place <= 4'b0000;
+                    units_place <= 4'b0000;
                 end
             else
                 begin
-                    thousands_place = score/1000;
-                    hundreds_place = (score%1000)/100;
-                    tens_place = (score%100)/10;
-                    units_place = score%10;
+                    thousands_place <= score/1000;
+                    hundreds_place <= (score%1000)/100;
+                    tens_place <= (score%100)/10;
+                    units_place <= score%10;
                 end
         end
 endmodule
